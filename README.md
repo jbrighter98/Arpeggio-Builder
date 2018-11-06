@@ -1,53 +1,84 @@
 # Arpeggio-Builder
 Guitar and Bass Arpeggio Builder
 
-from tkinter import *
+    from tkinter import *
+    import webbrowser
 
-class Window(Frame): #this class is the opening window
-    def __init__(self, master = None):
-        Frame.__init__(self, master)
-        self.master = master
-        self.init_window()
+    class Window(Frame): #this class is the opening window
+        def __init__(self, master = None):
+            Frame.__init__(self, master)
+            self.master = master
+            self.init_window()
 
-    def init_window(self):
-        self.master.title('Chord and Arpeggio Builder')
-        self.pack(fill=BOTH, expand = 1)
+        def init_window(self):
+            self.master.title('Chord and Arpeggio Builder')
+            self.pack(fill=BOTH, expand = 1)
 
-        quitButton = Button(self, text = 'Quit', command = self.client_exit)
-        quitButton.place(x=180, y=100)
+            quitButton = Button(self, text = 'Quit', command = self.client_exit)
+            quitButton.place(x=180, y=100)
 
-        label1 = Label(text = 'In which key would you like to build?')
-        label1.place(x=100,y=10)
+            label1 = Label(text = 'In which key would you like to build?')
+            label1.place(x=100,y=10)
         
-        v = StringVar()
-        entry1 = Entry(textvariable=v)
-        entry1.place(x=137,y=40)
+            v = StringVar()
+            entry1 = Entry(textvariable=v)
+            entry1.place(x=137,y=40)
         
-        #this button sends the input variable to the Build function outside of the class
-        gbutton = Button(text='Guitar', command=lambda: BuildGuitar(v.get()))
-        gbutton.place(x=158,y=70)
+            #this button sends the input variable to the Build function outside of the class
+            gbutton = Button(text='Guitar', command=lambda: BuildGuitar(v.get()))
+            gbutton.place(x=158,y=70)
         
-        bbutton = Button(text='Bass', command=lambda: BuildBass(v.get()))
-        bbutton.place(x=203, y=70)
+            bbutton = Button(text='Bass', command=lambda: BuildBass(v.get()))
+            bbutton.place(x=203, y=70)
 
-        conditionline1 = Label(text = 'Example Inputs:')
-        conditionline1.place(x=153,y=130)
+            conditionline1 = Label(text = 'Example Inputs:')
+            conditionline1.place(x=153,y=130)
 
-        conditionline2 = Label(text = 'Amin')
-        conditionline2.place(x= 180 , y=150 )
+            conditionline2 = Label(text = 'Amin')
+            conditionline2.place(x= 180 , y=150 )
 
-        conditionline3 = Label(text = 'G#maj')
-        conditionline3.place(x=177,y=170)
+            conditionline3 = Label(text = 'G#maj')
+            conditionline3.place(x=177,y=170)
 
-        conditionline4 = Label(text = 'Dbmin')
-        conditionline4.place(x=177,y=190)
+            conditionline4 = Label(text = 'Dbmin')
+            conditionline4.place(x=177,y=190)
 
-        conditionline5 = Label(text = '*Use # for sharps and b for flats*')
-        conditionline5.place(x=110,y=210)
-
+            conditionline5 = Label(text = '*Use # for sharps and b for flats*')
+            conditionline5.place(x=110,y=210)
+    
         
-    def client_exit(self):
-        exit()
+        def client_exit(self):
+            exit()
+        
+    
+    def callback1(event):
+        webbrowser.open_new(r"http://www.google.com")
+        
+    def callback2(event):
+        webbrowser.open_new(r"https://docs.python.org/2/library/webbrowser.html")
+    
+    def help_window():
+    
+        hwind = Toplevel(root)
+        hwind.geometry('400x300+500+50')
+        hwind.configure(background='white')
+        hwind.title('Help Window')
+    
+        with open('help_file','r') as help_file:
+            lines = help_file.readlines()
+            
+        for line in lines:
+            label = Label(text = line).pack
+         
+        space1 = Label(text = ' ').pack
+
+        link1 = Label(hwind, text="link1", fg="blue", cursor="hand2")
+        link1.pack()
+        link1.bind("<Button-1>", callback1)
+        
+        link1 = Label(hwind, text="link2", fg="blue", cursor="hand2")
+        link1.pack()
+        link1.bind("<Button-1>", callback2)
         
 
 def rotate(l):
