@@ -2,6 +2,7 @@
 Guitar and Bass Arpeggio Builder
 
     from tkinter import *
+    from tkinter import ttk
     import webbrowser
 
     class Window(Frame): #this class is the opening window
@@ -12,59 +13,152 @@ Guitar and Bass Arpeggio Builder
 
         def init_window(self):
             self.master.title('Chord and Arpeggio Builder')
-            self.pack(fill=BOTH, expand = 1)
 
-            quitButton = Button(self, text = 'Quit', command = self.client_exit)
-            quitButton.place(x=180, y=100)
+            nb = ttk.Notebook(root)
 
-            label1 = Label(text = 'In which key would you like to build?')
-            label1.place(x=100,y=10)
-        
+            self.page1 = ttk.Frame(nb)
+            nb.add(self.page1, text='Builder')
+            self.page2 = ttk.Frame(nb)
+            nb.add(self.page2, text='Alternative Build')
+            nb.pack(expan = 1, fill = 'both')
+
+            self.addingWidgets()
+
+        def addingWidgets(self):
+            labelFrame = ttk.LabelFrame(self.page1, text = 'Builder')
+            labelFrame.pack()
+
+            label1 = ttk.Label(labelFrame, text = 'In which key would you like to build?')
+            label1.pack()
+
             v = StringVar()
-            entry1 = Entry(textvariable=v)
-            entry1.place(x=137,y=40)
-        
+            entry1 = Entry(labelFrame, textvariable=v)
+            entry1.pack()
+
             #this button sends the input variable to the Build function outside of the class
-            gbutton = Button(text='Guitar', command=lambda: BuildGuitar(v.get()))
-            gbutton.place(x=158,y=70)
-        
-            bbutton = Button(text='Bass', command=lambda: BuildBass(v.get()))
-            bbutton.place(x=203, y=70)
-            
-            hbutton = Button(text='Help', command=help_window)
-            hbutton.place(x=0,y=0)
+            gbutton = ttk.Button(labelFrame, text='Guitar', command=lambda: BuildGuitar(v.get()))
+            gbutton.pack()
 
-            conditionline1 = Label(text = 'Example Inputs:')
-            conditionline1.place(x=153,y=130)
+            bbutton = ttk.Button(labelFrame, text='Bass', command=lambda: BuildBass(v.get()))
+            bbutton.pack()
 
-            conditionline2 = Label(text = 'Amin')
-            conditionline2.place(x= 180 , y=150 )
+            hbutton = ttk.Button(labelFrame, text='Help', command=help_window)
+            hbutton.pack()
 
-            conditionline3 = Label(text = 'G#maj')
-            conditionline3.place(x=177,y=170)
+            labelspace = ttk.Label(labelFrame, text = ' ')
+            labelspace.pack()
 
-            conditionline4 = Label(text = 'Dbmin')
-            conditionline4.place(x=177,y=190)
+            quitButton = ttk.Button(labelFrame, text = 'Quit', command = self.client_exit)
+            quitButton.pack()
 
-            conditionline5 = Label(text = '*Use # for sharps and b for flats*')
-            conditionline5.place(x=110,y=210)
-    
-        
+
+
+            notekey = [['C',0], ['C#',1],['Db',2], ['D',3], ['D#',4],['Eb',5], ['E',6],
+                       ['F',7], ['F#',8],['Gb',9], ['G',10], ['G#',11],['Ab',12], ['A',13],
+                       ['A#',14],['Bb',15], ['B',16]]
+
+            majmin = [['Major',17],['Minor',18]]
+
+            GorB = [['Guitar',19],['Bass',20]]
+
+
+            mmv = IntVar()
+            vv = IntVar()
+            GBV = IntVar()
+            vv.set(0)
+            mmv.set(17)
+            GBV.set(19)
+
+            labelFrame2 = ttk.LabelFrame(self.page2)
+            labelFrame2.grid(column=0,row=0)
+
+            label2 = ttk.Label(labelFrame2, text = 'In which key would you like to build?')
+            label2.pack()
+
+            for keyval,vval in notekey:
+                ttk.Radiobutton(labelFrame2, text = keyval, variable = vv, value = vval).pack(anchor=W)
+
+            labelFrame3 = ttk.LabelFrame(self.page2)
+            labelFrame3.grid(column=1,row=0,sticky='N')
+
+            label3 = ttk.Label(labelFrame3, text = 'Major or Minor?')
+            label3.pack()
+
+            for mmval,vmajmin in majmin:
+                ttk.Radiobutton(labelFrame3, text = mmval, variable = mmv, value = vmajmin).pack(anchor=W)
+
+
+            labelFrame4 = ttk.LabelFrame(self.page2)
+            labelFrame4.grid(column=2,row=0,sticky='N')
+
+            label4 = ttk.Label(labelFrame4, text = 'Guitar or Bass?')
+            label4.pack()
+
+            for GorBname,val_GB in GorB:
+                ttk.Radiobutton(labelFrame4, text = GorBname, variable = GBV, value = val_GB).pack(anchor=W)
+
+
+            labelFrame5 = ttk.LabelFrame(self.page2)
+            labelFrame5.grid(column=0,row=1)
+            buildbutton = ttk.Button(labelFrame5, text = 'Build', command = lambda: construct_input(vv.get(),mmv.get(),GBV.get()))
+            buildbutton.pack()
+
+            labelFrame6 = ttk.LabelFrame(self.page2)
+            labelFrame6.grid(column=2,row=1)
+
+            helpbutton = ttk.Button(labelFrame6, text='Help', command=help_window)
+            helpbutton.pack()
+
+            quitbutton = ttk.Button(labelFrame6, text = 'Quit', command = self.client_exit)
+            quitbutton.pack()
+
+
+
         def client_exit(self):
-            exit()
-        
-    
+             exit()
+
+
+
+
+    def construct_input(key_note,key_type,instrument):
+        notekey = [['C',0], ['C#',1],['Db',2], ['D',3], ['D#',4],['Eb',5], ['E',6],
+                       ['F',7], ['F#',8],['Gb',9], ['G',10], ['G#',11],['Ab',12], ['A',13],
+                       ['A#',14],['Bb',15], ['B',16]]
+
+        thekeynote = str(notekey[key_note][0])
+
+        if key_type == 17:
+            thekeytype = 'Major'
+        elif key_type == 18:
+            thekeytype = 'Minor'
+
+        key = thekeynote + thekeytype
+        print(key)
+
+        if instrument == 19:
+            BuildGuitar(key)
+        if instrument == 20:
+            BuildBass(key)        
+
     def callback1(event):
-    webbrowser.open_new(r"https://en.wikibooks.org/wiki/Guitar/Anatomy_of_a_Guitar")
-        
+        webbrowser.open_new(r"https://en.wikibooks.org/wiki/Guitar/Anatomy_of_a_Guitar")
+
     def callback2(event):
         webbrowser.open_new(r"http://www.gamlinsmusic.co.uk/anatomy-of-an-electric-bass-guitar/")
 
     def callback3(event):
         webbrowser.open_new(r"https://en.wikiversity.org/wiki/Introduction_to_music")
 
+    def callback4(event):
+        webbrowser.open_new(r"https://en.wikipedia.org/wiki/Major_and_minor")
+
+    def callback5(event):
+        webbrowser.open_new(r"https://en.wikipedia.org/wiki/Chord_(music)")
+
+
 
     def help_window():
+
         hwind = Toplevel(root)
         hwind.geometry('400x300+500+50')
         hwind.title('Help')
@@ -84,14 +178,23 @@ Guitar and Bass Arpeggio Builder
         link1.pack()
         link1.bind("<Button-1>", callback1)
 
-        link1 = Label(hwind, text="Brief Anatomy of Bass Guitar", fg="blue", cursor="hand2")
-        link1.pack()
-        link1.bind("<Button-1>", callback2)
+        link2 = Label(hwind, text="Brief Anatomy of Bass Guitar", fg="blue", cursor="hand2")
+        link2.pack()
+        link2.bind("<Button-1>", callback2)
 
-        link1 = Label(hwind, text="Brief intro to Music", fg="blue", cursor="hand2")
-        link1.pack()
-        link1.bind("<Button-1>", callback3)
-        
+        link3 = Label(hwind, text="Brief intro to Music", fg="blue", cursor="hand2")
+        link3.pack()
+        link3.bind("<Button-1>", callback3)
+
+        link4 = Label(hwind, text="Major and Minor", fg="blue", cursor="hand2")
+        link4.pack()
+        link4.bind("<Button-1>", callback4)
+
+        link5 = Label(hwind, text="What is a Chord?", fg="blue", cursor="hand2")
+        link5.pack()
+        link5.bind("<Button-1>", callback5)
+
+
 
     def rotate(l):
         lst = l[:]
@@ -209,21 +312,21 @@ Guitar and Bass Arpeggio Builder
         if key[1] == '#':
             Root = key[0].upper() + key[1]
         elif key[1] == 'B':
-            Root = key.upper() + key[1]
+            Root = key[0].upper() + key[1]
         else:
             Root = key[0].upper()
         print(Root)
 
 
         SharpNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
-        FlatNotes =  ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+        FlatNotes =  ['C', 'DB', 'D', 'EB', 'E', 'F', 'GB', 'G', 'AB', 'A', 'BB', 'B']
 
 
         Notes = []
 
         if Root in SharpNotes:
             Notes = SharpNotes[:]
-        elif self.Root in FlatNotes:
+        elif Root in FlatNotes:
             Notes = FlatNotes[:]
         else:
             print('Invalid Tonic')
@@ -528,18 +631,6 @@ Guitar and Bass Arpeggio Builder
                     ca.pack(fill=BOTH, expand=1)
 
                 mincount+=1
-
-
-
-
-
-
-
-
-
-
-
-
 
     def BuildBass(key):
 
@@ -619,30 +710,26 @@ Guitar and Bass Arpeggio Builder
             errorlabel.pack()
 
 
-
-
-
-
         fillcolor = 'black'
 
         if key[1] == '#':
             Root = key[0].upper() + key[1]
         elif key[1] == 'B':
-            Root = key.upper() + key[1]
+            Root = key[0].upper() + key[1]
         else:
             Root = key[0].upper()
         print(Root)
 
 
         SharpNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
-        FlatNotes =  ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+        FlatNotes =  ['C', 'DB', 'D', 'EB', 'E', 'F', 'GB', 'G', 'AB', 'A', 'BB', 'B']
 
 
         Notes = []
 
         if Root in SharpNotes:
             Notes = SharpNotes[:]
-        elif self.Root in FlatNotes:
+        elif Root in FlatNotes:
             Notes = FlatNotes[:]
         else:
             print('Invalid Tonic')
@@ -897,10 +984,9 @@ Guitar and Bass Arpeggio Builder
 
                 mincount+=1
 
-
-
     root = Tk()
-    root.geometry('400x300+50+50')
+    root.geometry('400x500+50+50')
+
 
     app = Window(root)
 
