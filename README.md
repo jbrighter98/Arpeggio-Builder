@@ -30,6 +30,9 @@ Guitar and Bass Arpeggio Builder
         
             bbutton = Button(text='Bass', command=lambda: BuildBass(v.get()))
             bbutton.place(x=203, y=70)
+            
+            hbutton = Button(text='Help', command=help_window)
+            hbutton.place(x=0,y=0)
 
             conditionline1 = Label(text = 'Example Inputs:')
             conditionline1.place(x=153,y=130)
