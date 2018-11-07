@@ -160,7 +160,7 @@ Guitar and Bass Arpeggio Builder
     def help_window():
 
         hwind = Toplevel(root)
-        hwind.geometry('400x300+500+50')
+        hwind.geometry('400x350+500+50')
         hwind.title('Help')
 
 
@@ -182,7 +182,7 @@ Guitar and Bass Arpeggio Builder
         link2.pack()
         link2.bind("<Button-1>", callback2)
 
-        link3 = Label(hwind, text="Brief intro to Music", fg="blue", cursor="hand2")
+        link3 = Label(hwind, text="Brief intro to Music Terminology", fg="blue", cursor="hand2")
         link3.pack()
         link3.bind("<Button-1>", callback3)
 
