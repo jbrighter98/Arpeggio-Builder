@@ -279,7 +279,7 @@ def show_arpeggio(key, numOfStrings = 6, searchNotes = []):
     buff = 100                                   # buffer space on sides of Neck display
 
     C_WIDTH = W_WIDTH - (2 * buff)              # canvas dimensions
-    C_HEIGHT = W_HEIGHT - (W_HEIGHT / 4)
+    C_HEIGHT = W_HEIGHT - (W_HEIGHT / 3.3)
 
 
     window = Toplevel(root) ### <<----------------------------------------------- links window to ROOT app frame

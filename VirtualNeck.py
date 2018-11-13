@@ -1,5 +1,5 @@
 class Neck():
-    def __init__(self, searchnotes=[], instrument = 'guitar', tuning = ['D','A','D','G','B','E'], sharp_o_flat = 'sharp'):
+    def __init__(self, searchnotes=[], instrument = 'guitar', tuning = ['E','A','D','G','B','E'], sharp_o_flat = 'sharp'):
         #print("print bass neck")
         #print(searchnotes)
         self.tuning = tuning
