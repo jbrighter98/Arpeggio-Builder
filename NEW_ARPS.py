@@ -524,7 +524,7 @@ def show_arpeggio(key, numOfStrings = 6, searchNotes = []):
         label = 'Notes: - '
         for note in searchNotes:
             label += note +' - '
-        canvas2.create_text(sections, row_y, text = label, font = 'Arial 20')
+        canvas2.create_text(sections, row_y, text = label, font = 'Arial 16')
         block(sections*2,row_y,color_pallet[0], 'Root',note = searchNotes[0])
         #canvas2.create_text(60, 50, text = 'ROOT')
 
