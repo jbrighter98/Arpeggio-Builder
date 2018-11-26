@@ -4,7 +4,7 @@ import webbrowser
 from CONSTANTS import *
 
 from buildArp import parse, buildMode
-from VirtualNeck import Neck
+from virtualneck import Neck
 
 DefaultTuning = ['E', 'A', 'D', 'G', 'B', 'E'] # SLOPPY SLOPPY SLOPPY
 # called as - global - in retune() and other functions,
@@ -38,7 +38,7 @@ class Window(Frame):   # this class is the opening window
         note_choices = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
         note_var = StringVar(self.page3)
         note_var.set('C')
-        notes_Menu = OptionMenu(self.page3, note_var, *note_choices)
+        notes_Menu = ttk.OptionMenu(self.page3, note_var, *note_choices)
         notes_Menu.pack()
 
         mode_choices = [ 'Ionian (major)',
@@ -52,7 +52,7 @@ class Window(Frame):   # this class is the opening window
                          ]
         mode_var = StringVar(self.page3)
         mode_var.set('Ionian (major)')
-        modes_Menu = OptionMenu(self.page3, mode_var, *mode_choices)
+        modes_Menu = ttk.OptionMenu(self.page3, mode_var, *mode_choices)
         modes_Menu.pack()
 
         GorB = [['Guitar', 6], ['Bass', 4], ["5 String", 5]]
@@ -63,11 +63,14 @@ class Window(Frame):   # this class is the opening window
             ttk.Radiobutton(self.page3, text = GorBname, variable = GBV, value = val_GB).pack()
 
 
-        but = Button(self.page3, text='go',
+        but = ttk.Button(self.page3, text='Build',
                      command=lambda: show_arpeggio(getModeInput(), # STRING name of arp/scale
                                                    numOfStrings = GBV.get(),
                                                    searchNotes = buildMode(note_var.get(), mode_var.get())))
         but.pack()
+
+        hbut = ttk.Button(self.page3, text='Help', command=help_window)
+        hbut.pack()
 
 
 
@@ -325,6 +328,14 @@ def callback5(event):
     webbrowser.open_new(r"https://en.wikipedia.org/wiki/Chord_(music)")
 
 
+def callback6(event):
+    webbrowser.open_new(r"https://en.wikipedia.org/wiki/Scale_(music)")
+
+
+def callback7(event):
+    webbrowser.open_new(r"https://outsideshore.com/primer/major-scale-harmony/#MajorScale")
+
+
 def help_window():
 
     hwind = Toplevel(root)
@@ -361,6 +372,14 @@ def help_window():
     link5 = Label(hwind, text="What is a Chord?", fg="blue", cursor="hand2")
     link5.pack()
     link5.bind("<Button-1>", callback5)
+
+    link6 = Label(hwind, text="What are Scales?", fg="blue", cursor="hand2")
+    link6.pack()
+    link6.bind("<Button-1>", callback6)
+
+    link7 = Label(hwind, text="What are the types of Scales for Guitar/Bass?", fg="blue", cursor="hand2")
+    link7.pack()
+    link7.bind("<Button-1>", callback7)
 
 def show_arpeggio(key, numOfStrings=6, searchNotes=[]):
     global DefaultTuning
@@ -436,7 +455,6 @@ def show_arpeggio(key, numOfStrings=6, searchNotes=[]):
     class NoteDot:
         def __init__(self, x, y, note, color, size=10, shift=2):
             '''
-
             :param x: x location of center(ish) of dot
             :param y: y location of center(ish) of dot
             :param note: String value - name of note
@@ -570,7 +588,6 @@ def show_arpeggio(key, numOfStrings=6, searchNotes=[]):
         '''
         Hodgepodge of proportional equations relying on 
         W_WIDHT, W_HEIGHT, dimensions, weird equations to make lower frets bigger. << unneccesary
-
         Also populates NotePositions, and markerPositions
         -- silly equations to place note markers proportionally within respective fret
         :return: 
@@ -650,7 +667,6 @@ def show_arpeggio(key, numOfStrings=6, searchNotes=[]):
 
     def drawArp(searchnotes=[]):
         '''
-
         :param searchnotes: List of Notes to Display
         iterates through the VirtualNeck object and displays searchnotes, 
         also adjusts the OPEN STRING markers.
@@ -677,7 +693,6 @@ def show_arpeggio(key, numOfStrings=6, searchNotes=[]):
 
     def drawScale(searchnotes=[]):
         '''
-
         :param searchnotes: List of Notes to Display
         iterates through the VirtualNeck object and displays searchnotes, 
         also handles the position of OPEN STRING markers.
@@ -734,9 +749,7 @@ def show_arpeggio(key, numOfStrings=6, searchNotes=[]):
         '''
         creates second canvas under the Display canvas.
         shows Colors relating to Root, 3rd, 5th, 7th.
-
             *** COLORS ACCESSED FROM MASTER LIST AT TOP ***
-
         :param color:  Color grabbed from color_pallet list
         :return: 
         '''
@@ -814,3 +827,4 @@ root.geometry(str(AppWidth)+'x'+str(AppHeight)+'+50+50')
 app = Window(root)
 
 root.mainloop()
+
