@@ -3,7 +3,7 @@ from tkinter import ttk
 import webbrowser
 
 from buildArp import parse, buildMode
-from VirtualNeck import Neck
+from virtualneck import Neck
 
 
 AppHeight = 600
@@ -42,7 +42,7 @@ class Window(Frame):   # this class is the opening window
         self.page1 = ttk.Frame(nb)
         nb.add(self.page1, text='Builder')
         self.page2 = ttk.Frame(nb)
-        nb.add(self.page2, text='Alternative Build')
+        nb.add(self.page2, text='Alternative Builder')
         self.page3 = ttk.Frame(nb)
 
 
@@ -62,7 +62,7 @@ class Window(Frame):   # this class is the opening window
         note_choices = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
         note_var = StringVar(self.page3)
         note_var.set('C')
-        notes_Menu = OptionMenu(self.page3, note_var, *note_choices)
+        notes_Menu = ttk.OptionMenu(self.page3, note_var, *note_choices)
         notes_Menu.pack()
 
 
@@ -76,11 +76,14 @@ class Window(Frame):   # this class is the opening window
                          ]
         mode_var = StringVar(self.page3)
         mode_var.set('Ionian (major)')
-        modes_Menu = OptionMenu(self.page3, mode_var, *mode_choices)
+        modes_Menu = ttk.OptionMenu(self.page3, mode_var, *mode_choices)
         modes_Menu.pack()
 
-        but = Button(self.page3, text='go', command=lambda: show_arpeggio(getModeInput(), numOfStrings = 6, searchNotes = buildMode(note_var.get(),mode_var.get())))
+        but = ttk.Button(self.page3, text='Build', command=lambda: show_arpeggio(getModeInput(), numOfStrings = 6, searchNotes = buildMode(note_var.get(),mode_var.get())))
         but.pack()
+
+        hbut = ttk.Button(self.page3, text='Help', command=help_window)
+        hbut.pack()
 
 
         def getModeInput():
@@ -221,10 +224,19 @@ def callback5(event):
     webbrowser.open_new(r"https://en.wikipedia.org/wiki/Chord_(music)")
 
 
+def callback6(event):
+    webbrowser.open_new(r"https://en.wikipedia.org/wiki/Scale_(music)")
+
+
+def callback7(event):
+    webbrowser.open_new(r"https://outsideshore.com/primer/major-scale-harmony/#MajorScale")
+    
+
+
 def help_window():
 
     hwind = Toplevel(root)
-    hwind.geometry('400x350+500+50')
+    hwind.geometry('400x400+500+50')
     hwind.title('Help')
 
 
@@ -257,6 +269,14 @@ def help_window():
     link5 = Label(hwind, text="What is a Chord?", fg="blue", cursor="hand2")
     link5.pack()
     link5.bind("<Button-1>", callback5)
+
+    link6 = Label(hwind, text="What are Scales?", fg="blue", cursor="hand2")
+    link6.pack()
+    link6.bind("<Button-1>", callback6)
+
+    link7 = Label(hwind, text="What are the types of Scales for Guitar/Bass?", fg="blue", cursor="hand2")
+    link7.pack()
+    link7.bind("<Button-1>", callback7)
 
 
 def show_arpeggio(key, numOfStrings = 6, searchNotes = []):
@@ -449,7 +469,6 @@ def show_arpeggio(key, numOfStrings = 6, searchNotes = []):
 
     def drawScale(searchnotes=[]):
         '''
-
         :param searchnotes: List of Notes to Display
         iterates through the VirtualNeck object and displays searchnotes, 
         also handles the position of OPEN STRING markers.
@@ -562,3 +581,5 @@ root.geometry(str(AppWidth)+'x'+str(AppHeight)+'+50+50')
 app = Window(root)
 
 root.mainloop()
+
+
