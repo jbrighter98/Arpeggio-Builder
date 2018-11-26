@@ -1,32 +1,15 @@
 from tkinter import *
 from tkinter import ttk
 import webbrowser
+from CONSTANTS import *
 
 from buildArp import parse, buildMode
-from virtualneck import Neck
+from VirtualNeck import Neck
 
+DefaultTuning = ['E', 'A', 'D', 'G', 'B', 'E'] # SLOPPY SLOPPY SLOPPY
+# called as - global - in retune() and other functions,
+# theres absolutely a better way to do this
 
-AppHeight = 600
-AppWidth = 500
-
-### origonal ###  color_pallet = ['#BA4141', '#95FA92', '#4196C0', '#DCEF8F'] ### for NOTES R, 3, 5, 7
-color_pallet = ['#FF5151', '#B1F69C', '#A4EBF0', '#F6F9A3']
-####           [  'red'     'green'     'blue'    'yellow']
-####            [   1         3           5          7    ]
-
-neckColor =     '#C9B5A4'
-
-fretColor =     '#666666'
-fretOutline =   '#000000'
-
-stringOutline = '#444444'
-stringColor =   '#757575'
-
-markerCenter = '#FCFFEB'
-markerOutline = '#797367'
-
-highlights = '#FFFFFF'
-stringHighlights = '#D0D0D0'
 
 class Window(Frame):   # this class is the opening window
     def __init__(self, master = None):
@@ -35,6 +18,8 @@ class Window(Frame):   # this class is the opening window
         self.init_window()
 
     def init_window(self):
+        global DefaultTuning
+
         self.master.title('Chord and Arpeggio Builder')
 
         nb = ttk.Notebook(root)
@@ -42,29 +27,19 @@ class Window(Frame):   # this class is the opening window
         self.page1 = ttk.Frame(nb)
         nb.add(self.page1, text='Builder')
         self.page2 = ttk.Frame(nb)
-        nb.add(self.page2, text='Alternative Builder')
+        nb.add(self.page2, text='Alternative Build')
         self.page3 = ttk.Frame(nb)
-
-
-
 
         nb.add(self.page3, text='Scales')
         nb.pack(expan = 1, fill = 'both')
 
-
-
-
-
-        ###### DONT KNOW WHERE TO PUT BELOW IN ADDWIDGIT
-
-
+        # ##### DONT KNOW WHERE TO PUT BELOW IN ADDWIDGIT
 
         note_choices = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
         note_var = StringVar(self.page3)
         note_var.set('C')
-        notes_Menu = ttk.OptionMenu(self.page3, note_var, *note_choices)
+        notes_Menu = OptionMenu(self.page3, note_var, *note_choices)
         notes_Menu.pack()
-
 
         mode_choices = [ 'Ionian (major)',
                          'Dorian',
@@ -73,19 +48,142 @@ class Window(Frame):   # this class is the opening window
                          'Mixolydian',
                          'Aeolian (minor)',
                          'Locrian',
+                         'Harmonic minor'
                          ]
         mode_var = StringVar(self.page3)
         mode_var.set('Ionian (major)')
-        modes_Menu = ttk.OptionMenu(self.page3, mode_var, *mode_choices)
+        modes_Menu = OptionMenu(self.page3, mode_var, *mode_choices)
         modes_Menu.pack()
 
-        but = ttk.Button(self.page3, text='Build', command=lambda: show_arpeggio(getModeInput(), numOfStrings = 6, searchNotes = buildMode(note_var.get(),mode_var.get())))
+        GorB = [['Guitar', 6], ['Bass', 4], ["5 String", 5]]
+        GBV = IntVar()
+        GBV.set(6)
+
+        for GorBname,val_GB in GorB:
+            ttk.Radiobutton(self.page3, text = GorBname, variable = GBV, value = val_GB).pack()
+
+
+        but = Button(self.page3, text='go',
+                     command=lambda: show_arpeggio(getModeInput(), # STRING name of arp/scale
+                                                   numOfStrings = GBV.get(),
+                                                   searchNotes = buildMode(note_var.get(), mode_var.get())))
         but.pack()
 
-        hbut = ttk.Button(self.page3, text='Help', command=help_window)
-        hbut.pack()
 
 
+        ###################### CASCADING MENUS #############################
+        def donothing():
+            print('not doing it.')
+
+        def tuningMenu():
+            windowWidth = 100
+            windowHeight = 300
+
+            tune_window = Toplevel(
+                root)  ### <<----------------------------------------------- links window to ROOT app frame
+            tune_window.geometry( str(windowWidth) + 'x' + str(windowHeight)  + '+500+50')
+            tune_window.configure(background='white')
+            tune_window.title('Tuning')
+
+
+
+            menus = []
+            selections = []
+            def create_dropdown():
+
+                x = 10
+                spacing = (windowHeight - 30) / 6
+                newTuning = []
+
+                Tuning = DefaultTuning[:]
+                Tuning.reverse()
+
+                for note in Tuning:
+
+                    note_choices = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+                    while note != note_choices[0]:
+                        note_choices = note_choices[1:] +[note_choices[0]]
+
+
+
+                    note_var = StringVar(tune_window)
+                    note_var.set(note_choices[0])
+                    notes_Menu = OptionMenu(tune_window, note_var, *note_choices)
+                    notes_Menu.config(width = 8)
+                    notes_Menu.place(x = 10 , y = x)
+                    menus.append(notes_Menu)
+                    selections.append(note_var)
+                    x += spacing
+
+            def retune():
+                global DefaultTuning
+                outp = []
+                for note in selections:
+                    outp.append(note.get())
+                outp.reverse()
+
+                print(outp)
+
+                DefaultTuning = outp[:]
+                return outp
+
+
+            create_dropdown()
+
+            tuneButton = Button(tune_window, text='Tune', command=retune)
+            tuneButton.place(x = windowWidth/2, y = windowHeight-15, anchor = 'center')
+
+        def standardTuning():
+            global DefaultTuning
+
+            DefaultTuning = ['E','A','D','G','B','E']
+
+        def DropDTuning():
+            global DefaultTuning
+
+            DefaultTuning = ['D', 'A', 'D', 'G', 'B', 'E']
+
+        def fiveStringB():
+            global DefaultTuning
+
+            DefaultTuning = ['B','E','A','D','G','C']
+
+        menubar = Menu(root)
+        filemenu = Menu(menubar, tearoff=1, title = 'Tune')
+
+
+        filemenu.add_command(label="Standard", command=standardTuning)
+        filemenu.add_command(label="Drop D", command=DropDTuning)
+        filemenu.add_command(label="Five String", command=fiveStringB)
+        filemenu.add_command(label="Close", command=donothing)
+
+        filemenu.add_separator()
+
+        filemenu.add_command(label="Custom...", command=tuningMenu)
+
+        #filemenu.add_command(label="Exit", command=root.quit)
+        menubar.add_cascade(label="Tuning", menu=filemenu)
+
+
+        editmenu = Menu(menubar, tearoff=0)
+        editmenu.add_command(label="Undo", command=donothing)
+
+        editmenu.add_separator()
+
+        editmenu.add_command(label="Cut", command=donothing)
+        editmenu.add_command(label="Copy", command=donothing)
+        editmenu.add_command(label="Paste", command=donothing)
+        editmenu.add_command(label="Delete", command=donothing)
+        editmenu.add_command(label="Select All", command=donothing)
+
+        menubar.add_cascade(label="Edit", menu=editmenu)
+        helpmenu = Menu(menubar, tearoff=0)
+        helpmenu.add_command(label="Help Index", command=donothing)
+        helpmenu.add_command(label="About...", command=donothing)
+        menubar.add_cascade(label="Help", menu=helpmenu)
+
+        root.config(menu=menubar)
+        ##################### CASCADING MENUS   #################
         def getModeInput():
             outp = note_var.get() + ' ' + mode_var.get()
             #print(outp)
@@ -105,7 +203,7 @@ class Window(Frame):   # this class is the opening window
         entry1 = Entry(labelFrame, textvariable=v)
         entry1.pack()
 
-        #this button sends the input variable to the Build function outside of the class
+        # this button sends the input variable to the Build function outside of the class
         gbutton = ttk.Button(labelFrame, text='Guitar', command=lambda: show_arpeggio(v.get(), 6, parse(v.get())))
         gbutton.pack()
 
@@ -127,7 +225,7 @@ class Window(Frame):   # this class is the opening window
 
         majmin = [['Major',17],['Minor',18]]
 
-        GorB = [['Guitar',19],['Bass',20]]
+        GorB = [['Guitar',19],['Bass',20],["5 String", 21]]
 
         mmv = IntVar()
         vv = IntVar()
@@ -168,6 +266,7 @@ class Window(Frame):   # this class is the opening window
         labelFrame5 = ttk.LabelFrame(self.page2)
         labelFrame5.grid(column=0,row=1)
         buildbutton = ttk.Button(labelFrame5, text = 'Build', command = lambda: construct_input(vv.get(),mmv.get(),GBV.get()))
+
         buildbutton.pack()
 
         labelFrame6 = ttk.LabelFrame(self.page2)
@@ -196,12 +295,14 @@ def construct_input(key_note,key_type,instrument):
         thekeytype = 'Minor'
 
     key = thekeynote + thekeytype
-    print(key, 'here')
+    #print(key, 'here')
 
     if instrument == 19:
         show_arpeggio(key, 6, parse(key))
     if instrument == 20:
         show_arpeggio(key, 4, parse(key))
+    if instrument == 21:
+        show_arpeggio(key,5, parse(key))
 
 
 def callback1(event):
@@ -224,19 +325,10 @@ def callback5(event):
     webbrowser.open_new(r"https://en.wikipedia.org/wiki/Chord_(music)")
 
 
-def callback6(event):
-    webbrowser.open_new(r"https://en.wikipedia.org/wiki/Scale_(music)")
-
-
-def callback7(event):
-    webbrowser.open_new(r"https://outsideshore.com/primer/major-scale-harmony/#MajorScale")
-    
-
-
 def help_window():
 
     hwind = Toplevel(root)
-    hwind.geometry('400x400+500+50')
+    hwind.geometry('400x350+500+50')
     hwind.title('Help')
 
 
@@ -270,16 +362,8 @@ def help_window():
     link5.pack()
     link5.bind("<Button-1>", callback5)
 
-    link6 = Label(hwind, text="What are Scales?", fg="blue", cursor="hand2")
-    link6.pack()
-    link6.bind("<Button-1>", callback6)
-
-    link7 = Label(hwind, text="What are the types of Scales for Guitar/Bass?", fg="blue", cursor="hand2")
-    link7.pack()
-    link7.bind("<Button-1>", callback7)
-
-
-def show_arpeggio(key, numOfStrings = 6, searchNotes = []):
+def show_arpeggio(key, numOfStrings=6, searchNotes=[]):
+    global DefaultTuning
     '''
     Function that:  Generates Display Window,
                     Draws Neck (frets, strings, fretMarkers)
@@ -289,29 +373,33 @@ def show_arpeggio(key, numOfStrings = 6, searchNotes = []):
     :param searchNotes: ---- Notes to find/display
     :return: 
     '''
+
+
     Flatnotes = ['Db', 'Eb', 'Gb', 'Ab', 'Bb']
 
+    working_notes = []
 
-
-
-    W_WIDTH = 1200                              # window dimensions
+    W_WIDTH = 1200  # window dimensions
     W_HEIGHT = 200
-    buff = 100                                   # buffer space on sides of Neck display
+    buff = 100  # buffer space on sides of Neck display
 
-    C_WIDTH = W_WIDTH - (2 * buff)              # canvas dimensions
+    C_WIDTH = W_WIDTH - (2 * buff)  # canvas dimensions
     C_HEIGHT = W_HEIGHT - (W_HEIGHT / 3.3)
 
-
-    window = Toplevel(root) ### <<----------------------------------------------- links window to ROOT app frame
-    window.geometry(str(W_WIDTH) + 'x' + str(W_HEIGHT) +'+50+400')
-    window.configure(background='white')
+    window = Toplevel(root)  ### <<----------------------------------------------- links window to ROOT app frame
+    window.geometry(str(W_WIDTH) + 'x' + str(W_HEIGHT) + '+50+400')
+    window.configure(background=lightGray)
     window.title(key)
-    canvas = Canvas(window, width = C_WIDTH, height = C_HEIGHT, bg = neckColor)#4B2D00')
 
+    ####  CUT CUT CUT CUT vvvv
+    # canvasoutl = Canvas(window, width=C_WIDTH, height=C_HEIGHT, bg=shade(neckColor, 100), borderwidth = 20)  # 4B2D00')
+    #
+    # canvasoutl.place(x=W_WIDTH /2, y=0, anchor='n')
+    ##### CANVAS BEHIND CANVAS^^^^
+    canvas = Canvas(window, width=C_WIDTH, height=C_HEIGHT, bg=neckColor, borderwidth = 0, relief = SUNKEN, highlightbackground= black)  # 4B2D00')
 
-
-    canvas.place(x = W_WIDTH/2, y= 10, anchor = 'n')
-    #canvas.pack(fill=NONE, expand=1)   #### ^^ Limit / restructure
+    canvas.place(x=W_WIDTH / 2, y=10, anchor='n')
+    # canvas.pack(fill=NONE, expand=1)   #### ^^ Limit / restructure
 
 
     StringPositions = []
@@ -319,26 +407,36 @@ def show_arpeggio(key, numOfStrings = 6, searchNotes = []):
     NotePositions = []
     markerPositions = []
 
+    black_bars = []
+
     if (searchNotes[0] in Flatnotes):
+
         nType = 'flat'
     else:
         nType = 'sharp'
 
-
     if numOfStrings == 4:
-        neck = Neck(searchnotes = searchNotes, instrument = 'bass', sharp_o_flat= nType)
+        neck = Neck(searchnotes = searchNotes,
+                    instrument = 'bass',
+                    sharp_o_flat = nType,
+                    tuning = DefaultTuning)
+    if numOfStrings == 5:
+        # DefaultTuning = ['B', 'E', 'A', 'D', 'G','B']
+        neck = Neck(searchnotes=searchNotes,
+                    instrument='5string',
+                    sharp_o_flat=nType,
+                    tuning=DefaultTuning)
 
     elif numOfStrings == 6:
-        neck = Neck(searchnotes = searchNotes, instrument = 'guitar', sharp_o_flat= nType)
-
-
-
-
+        neck = Neck(searchnotes = searchNotes,
+                    instrument = 'guitar',
+                    sharp_o_flat = nType,
+                    tuning = DefaultTuning)    #### VARIABLE HOLDING [EADGBE] DEFAULT << CHANGED BY THE "Change Tuning" menu option?
 
     class NoteDot:
-        def __init__(self, x, y, note, color, size = 10, shift = 2):
+        def __init__(self, x, y, note, color, size=10, shift=2):
             '''
-            
+
             :param x: x location of center(ish) of dot
             :param y: y location of center(ish) of dot
             :param note: String value - name of note
@@ -347,80 +445,188 @@ def show_arpeggio(key, numOfStrings = 6, searchNotes = []):
             :param shift: SHIFT NOTE NAME DISPLAY RIGHT(+) or LEFT (-)
             '''
 
+            self.x = x
+            self.y = y
+
+            self.defaultSize = 10
+            self.size = size
+            self.shift = shift
             self.note = note
             self.color = color
-            canvas.create_oval(x + size*1.5, y - size, x - size, y + size, fill=color)
-            canvas.create_text(x +shift, y, text=note, font="Arial 15 bold")
+            self.size2 = size - 2   # size of highlight on note
+            self.shadeAmount = 125  # amount to subtract from RGB when run through shade() function
+
+            self.fontColor = black
+            self.font = "Arial 15 bold"
+
+            if self.color == gray:
+                self.fontColor = darkGray
+                self.font = "Arial 10 bold"
+
+
+
+            # --- Shaded / outlined base for Note
+            self.A = canvas.create_oval(self.x + self.size * 1.5, y - self.size, x - self.size, self.y + self.size,
+                                        fill=shade(self.color, self.shadeAmount),
+                                        outline=shade(shade(self.color, self.shadeAmount),self.shadeAmount),
+                                        width=1)
+            # --- 'Highlight' on Note - uses color from preset [r g b y] list
+            self.B = canvas.create_oval(self.x + self.size2 * 1.5, self.y - self.size2, self.x - self.size2,
+                                        y + self.size2,
+                                        fill=self.color,
+                                        outline='')
+            # self.size2 -=2
+            # self.HL = canvas.create_oval((self.x + self.size2 * 1.5)-1, (self.y - self.size2)-2, (self.x - self.size2)-2,
+            #                              (y + self.size2)-3,
+            #                             fill=lightn(self.color,20),
+            #                             outline='')
+
+            # --- Display note text on note
+            self.C = canvas.create_text(self.x + self.shift, self.y, text=self.note, font=self.font, fill = self.fontColor)
+
+
+            # binds whole note dot display to action   ----------VVVVV
+            canvas.tag_bind(self.A, '<ButtonPress-1>', lambda x: ALL(self))
+            canvas.tag_bind(self.B, '<ButtonPress-1>', lambda x: ALL(self))
+            canvas.tag_bind(self.C, '<ButtonPress-1>', lambda x: ALL(self))
+
+        # def shade(self, hexcolor):
+        #     working = hex2rgb(hexcolor)
+        #     working = [(i - self.shadeAmount) if ((i - self.shadeAmount) >= 0) else 0 for i in
+        #                working]  ### ASSURES VALUES DONT GO BELOW 0 #####
+        #     c = rgb2hex(working[0], working[1], working[2])
+        #     return c
+
+        def replaceDot(self):  # , x, y, note, color, size, shift):
+            canvas.delete(self.A)
+            canvas.delete(self.B)
+            canvas.delete(self.C)
+
+    def GOTCLICK(note_dot, color=red):
+        # print(note_dot.note)
+        note_dot.replaceDot()
+        searchnotes = searchNotes[:]
+        x = note_dot.x
+        y = note_dot.y
+        note = note_dot.note
+        size = note_dot.defaultSize
+        # print('sss',working_notes)
+        if color == gray:
+            size -= 1.5
+        if x == NotePositions[0]:
+            size += 1
+
+        n = note_dot.__init__(x, y, note, color, size, shift=note_dot.shift)
+
+    def ALL(newRoot_Dot, searchnotes=[]):
+        newNotes = []
+        for n in working_notes:
+            if n.note not in newNotes:
+                newNotes.append(n.note)
+
+        while newRoot_Dot.note != newNotes[0]:
+            newNotes = newNotes[1:] + [newNotes[0]]
+
+        if len(newNotes) <= 4:
+
+
+            ## add conditions for scale function
+
+            for n in working_notes:
+                newColor = color_pallet[newNotes.index(n.note)]
+
+                GOTCLICK(n, newColor)
+
+
+
+
+                ## add conditions for scale function
+
+        #######stump############
+        else:
+
+            arp = [newNotes[i] for i in [0, 2, 4, 6]]
+            for n in working_notes:
+                if n.note in arp:
+                    newColor = color_pallet[arp.index(n.note)]
+                else:
+                    newColor = gray
+                GOTCLICK(n, newColor)
+
+
+        # redraws L and R border -- stylistic only.
+        for b in black_bars:
+
+            canvas.delete(b)
+        #print(len(black_bars))
+        while len(black_bars) != 0:
+            black_bars.pop()
+        #print(len(black_bars))
+        draw_border()
+        #print(len(black_bars))
 
 
     def genFrets():
         '''
         Hodgepodge of proportional equations relying on 
         W_WIDHT, W_HEIGHT, dimensions, weird equations to make lower frets bigger. << unneccesary
-        
+
         Also populates NotePositions, and markerPositions
         -- silly equations to place note markers proportionally within respective fret
         :return: 
         '''
 
-
         def draw_fret(x, size):
-
-            canvas.create_line(x, 0, x, C_HEIGHT, width=size, fill = fretOutline)
-            canvas.create_line(x, 0, x, C_HEIGHT, width=size -2, fill= fretColor)
-            canvas.create_line(x-1, 0, x-1, C_HEIGHT, width=1, fill=highlights)
+            canvas.create_line(x, 0, x, C_HEIGHT+10, width=size, fill=fretOutline)
+            canvas.create_line(x, 0, x, C_HEIGHT+10, width=size - 2, fill=fretColor)
+            canvas.create_line(x - 1, 0, x - 1, C_HEIGHT+10, width=1, fill=highlights)
 
         length = C_WIDTH
-        draw_fret(5,5)    # start neck (open string)
-        draw_fret(length, 5)    # end neck (12 fret)
+        draw_fret(5, 5)  # start neck (open string)
+        draw_fret(length, 5)  # end neck (12 fret)
 
-        spacing = (length / 16.5)
+        spacing = (length / 21)   ############################################################### create starting spacing, (smallest fret) based on fraction of neck length
 
         pos = length - spacing
 
-        NotePositions.append(5) ###### POSITION OF OPEN STRING NOTES
+        NotePositions.append(5)  ###### POSITION OF OPEN STRING NOTES
         markerPositions.append(0)
-        NotePositions.append(pos + ((spacing/7)*4.5)) ##### POSITION OF 12th FRET NOTE
-        markerPositions.append(pos+spacing/2)
+        NotePositions.append(pos + ((spacing / 7) * 4.5))  ##### POSITION OF 12th FRET NOTE
+        markerPositions.append(pos + spacing / 2)
 
-        while pos > 50:   ### keeps frets from being generated too close to TOP of neck
+        while pos > 50:  ### keeps frets from being generated too close to TOP of neck
             draw_fret(pos, 4)
             prevpos = pos
             pos -= spacing
-            notePos = pos + (((prevpos - pos)/7)*4.5)  ##### INSERTS BETWEEN OPEN STRING and 12Th FRET   ( NOTE 3/5ths of way to next fret )
+            notePos = pos + (((
+                                  prevpos - pos) / 7) * 4.5)  ##### INSERTS BETWEEN OPEN STRING and 12Th FRET   ( NOTE 3/5ths of way to next fret )
 
+            NotePositions.insert(1, notePos)
+            markerPositions.insert(1, pos + ((prevpos - pos) / 2))
+            spacing += 2                                                                                ################# increase spacing to get larger frets at top of neck.
 
-            NotePositions.insert(1,notePos)
-            markerPositions.insert(1, pos + ((prevpos-pos)/2))
-            spacing += 4.6
-
-        '''for n in NotePositions:
-            canvas.create_line(n, 0, n, 10, width = 10)   ### DOTS AT TOP/bottom   --------------------------------TESTING
-            canvas.create_line(n, C_HEIGHT, n, C_HEIGHT-10, width=10)'''
 
         def single(x, y):
             size = 10
-            canvas.create_oval(x + size, y - size, x - size, y + size, fill=markerCenter, outline = markerOutline, width = 5)
-            canvas.create_oval(x + size, y - size, x - size, y + size, fill=markerCenter, outline = 'black', width = 2.3)
+            canvas.create_oval(x + size, y - size, x - size, y + size, fill=markerCenter, outline=markerOutline,
+                               width=5)
+            canvas.create_oval(x + size, y - size, x - size, y + size, fill=markerCenter, outline='black', width=2.3)
+
         def drawMarkers():
-
-
-            single(markerPositions[3], C_HEIGHT / 2)            #### drawing fret markers
+            single(markerPositions[3], C_HEIGHT / 2)  #### drawing fret markers
             single(markerPositions[5], C_HEIGHT / 2)
             single(markerPositions[7], C_HEIGHT / 2)
             single(markerPositions[9], C_HEIGHT / 2)
             single(markerPositions[12], C_HEIGHT / 3.5)
-            single(markerPositions[12], C_HEIGHT-(C_HEIGHT / 3.5 ))
+            single(markerPositions[12], C_HEIGHT - (C_HEIGHT / 3.5))
+            single(markerPositions[15], C_HEIGHT / 2)
 
         drawMarkers()
 
     def genStrings(n_of_strings):
         top = 15
-        bottom = C_HEIGHT - top/2  ## DUMB CORRECTIONS< BOTTOM HAS EXTRA SPACE
-        stringWidth = C_HEIGHT - 2*(top-2) ############### I THIS IS A MESS,    weird math makes it seem to work?
-
-
-
+        bottom = C_HEIGHT - top / 2  ## DUMB CORRECTIONS< BOTTOM HAS EXTRA SPACE
+        stringWidth = C_HEIGHT - 2 * (top - 2)  ############### I THIS IS A MESS,    weird math makes it seem to work?
 
         spacing = (stringWidth / (n_of_strings - 1))
 
@@ -429,21 +635,22 @@ def show_arpeggio(key, numOfStrings = 6, searchNotes = []):
             w = 5
         else:
             w = 3
-        while x < bottom +1:
+        while x < bottom + 1:
             StringPositions.append(x)
 
-            canvas.create_line(0,x,C_WIDTH,x, width = w, fill = stringOutline)
-            canvas.create_line(0, x, C_WIDTH, x, width=w-2, fill= stringColor)
-            canvas.create_line(0, x-1, C_WIDTH, x-1, width= 1, fill= stringHighlights)
+            canvas.create_line(0, x, C_WIDTH, x, width=w, fill=stringOutline)
+            canvas.create_line(0, x, C_WIDTH, x, width=w - 2, fill=stringColor)
+            canvas.create_line(0, x - 1, C_WIDTH, x - 1, width=1, fill=stringHighlights)
             x += spacing
+
     genStrings(numOfStrings)
 
     genFrets()
     genStrings(numOfStrings)
 
-    def drawArp(searchnotes = []):
+    def drawArp(searchnotes=[]):
         '''
-        
+
         :param searchnotes: List of Notes to Display
         iterates through the VirtualNeck object and displays searchnotes, 
         also adjusts the OPEN STRING markers.
@@ -458,17 +665,19 @@ def show_arpeggio(key, numOfStrings = 6, searchNotes = []):
             for note in string:
                 if note in searchnotes:
                     if n == 0:
-                        NoteDot(NotePositions[n], StringPositions[s], note, colors[searchnotes.index(note)], size = 11, shift = 8)
+                        d = NoteDot(NotePositions[n], StringPositions[s], note, colors[searchnotes.index(note)],
+                                    size=11, shift=8)
                     else:
-                        NoteDot(NotePositions[n], StringPositions[s], note, colors[searchnotes.index(note)])
-
+                        d = NoteDot(NotePositions[n], StringPositions[s], note, colors[searchnotes.index(note)])
+                    working_notes.append(d)
 
                 n += 1
-            s+=1
+            s += 1
             n = 0
 
     def drawScale(searchnotes=[]):
         '''
+
         :param searchnotes: List of Notes to Display
         iterates through the VirtualNeck object and displays searchnotes, 
         also handles the position of OPEN STRING markers.
@@ -480,90 +689,115 @@ def show_arpeggio(key, numOfStrings = 6, searchNotes = []):
         colors = color_pallet[:]
         arpnotes = [searchnotes[i] for i in [0, 2, 4, 6]]
 
-
         for string in neck.NECK:
             for note in string:
 
-
                 if note in searchnotes:
-                    color = 'gray'
+                    color = gray
+                    size = 8.5
                     if note in arpnotes:
                         color = colors[arpnotes.index(note)]
+                        size = 10
 
                     if n == 0:
-                        NoteDot(NotePositions[n], StringPositions[s], note, color, size=11,
-                                shift=8)
+                        d = NoteDot(NotePositions[n], StringPositions[s], note, color, size=11,
+                                    shift=7)
                     else:
-                        NoteDot(NotePositions[n], StringPositions[s], note, color)
+                        d = NoteDot(NotePositions[n], StringPositions[s], note, color, size = size)
+                    working_notes.append(d)
 
                 n += 1
             s += 1
             n = 0
 
-
     def draw_border():
         '''
-        attmpting to place border around canvas ---- did not leave room at edges of canvas, and there seems to be extra pixels at bottom.
-        something fucky going on with coordinates/display
-        :return: 
+        # attmpting to place border around canvas ---- did not leave room at edges of canvas, and there seems to be extra pixels at bottom.
+        # something fucky going on with coordinates/display
+        # :return:
         '''
 
-        #TOP BOTTOM
-        #canvas.create_line(0, 2, C_WIDTH, 0, width=10, fill='#797367')
-        #canvas.create_line(0, C_HEIGHT-3, C_WIDTH, C_HEIGHT-3, width=3, fill='#797367')
+        # TOP BOTTOM
+        # canvas.create_line(0, 2, C_WIDTH, 0, width=10, fill='#797367')
+        # canvas.create_line(0, C_HEIGHT-3, C_WIDTH, C_HEIGHT-3, width=3, fill='#797367')
 
         # SIDES
-        canvas.create_line(3, 0, 3, C_HEIGHT, width=8, fill='black')
-        #canvas.create_line(6, 0, 6, C_HEIGHT, width=2, fill=fretColor)
-        canvas.create_line(C_WIDTH, 0, C_WIDTH, C_HEIGHT, width=3, fill='black')
+        top = canvas.create_line(3, 0, 3, C_HEIGHT, width=3, fill='black')
+        # canvas.create_line(6, 0, 6, C_HEIGHT, width=2, fill=fretColor)
+        bottom = canvas.create_line(C_WIDTH, 0, C_WIDTH, C_HEIGHT, width=3, fill='black')
+        black_bars.append(top)
+        black_bars.append(bottom)
 
 
-    def draw_color_key(color):
+
+    def draw_color_key(color, replace = False):
         '''
         creates second canvas under the Display canvas.
         shows Colors relating to Root, 3rd, 5th, 7th.
-         
+
             *** COLORS ACCESSED FROM MASTER LIST AT TOP ***
-            
+
         :param color:  Color grabbed from color_pallet list
         :return: 
         '''
-        canvas2 = Canvas(window, width=W_WIDTH, height=W_HEIGHT - C_HEIGHT, bg='white')  # 4B2D00')
+        def kill_color_key():
+            canvas2.forget()
+        if replace:
+            kill_color_key()
+        canvas2 = Canvas(window, width=W_WIDTH - 20, height=W_HEIGHT - (C_HEIGHT +20), bg=lightn(lightGray,20), bd = 0, relief = SUNKEN, highlightbackground = shade(lightGray,50))  # 4B2D00')
 
-        canvas2.place(x=W_WIDTH / 2, y=10 + C_HEIGHT, anchor='n')
-        def block(x,y,color = 'black', label = '', note = ''):
+        canvas2.place(x=W_WIDTH / 2, y= 20 + C_HEIGHT, anchor='n')
+
+
+
+        def block(x, y, color='black', label='', note=''):
             size = 15
 
-            canvas2.create_rectangle(x + size, y + size/2, x - size, y- size/3, fill = color)
-            canvas2.create_text(x,y+2,text = note, font = 'Arial 13 bold')
-            canvas2.create_text(x+size + 10, y, text = label, font = "Arial 15", anchor = 'w')
+            canvas2.create_rectangle(x + size, y + size / 2, x - size, y - size / 3, fill=color)
+            canvas2.create_text(x, y + 2, text=note, font='Arial 13 bold')
+            canvas2.create_text(x + size + 10, y, text=label, font="Arial 15", anchor='w')
 
-        sections = W_WIDTH / 6
+        sections = W_WIDTH / 10
         row_y = 20
         label = 'Notes: - '
         for note in searchNotes:
-            label += note +' - '
-        canvas2.create_text(sections, row_y, text = label, font = 'Arial 16')
-        block(sections*2,row_y,color_pallet[0], 'Root',note = searchNotes[0])
-        #canvas2.create_text(60, 50, text = 'ROOT')
+            label += note + ' - '
+        if len(searchNotes) == 7:
+            arp = [searchNotes[n] for n in [0, 2, 4, 6]]
+        else:
+            arp = searchNotes[:]
 
-        block(sections*3,row_y, color_pallet[1], 'Third',note = searchNotes[1])
+        # canvas2.create_line(0,3,W_WIDTH,3, width = 4)
+        # canvas2.create_line(0, 3, W_WIDTH, 3,fill = 'white' ,width=2)
+        # canvas2.create_line(3, 3, 3, W_HEIGHT, fill=black, width=4)
+        # canvas2.create_line(3, 3, 3, W_HEIGHT, fill = 'white',width=2)
+        # canvas2.create_line(W_WIDTH-20, 3, W_WIDTH-20, W_HEIGHT, fill=black, width=4)
+        # canvas2.create_line(W_WIDTH-20, 3, W_WIDTH-20, W_HEIGHT, fill='white', width=2)
 
-        block(sections*4, row_y, color_pallet[2], 'Fifth',note = searchNotes[2])
-        block(sections*5, row_y, color_pallet[3], 'Seventh',note = searchNotes[3])
+
+        canvas2.create_text(sections*1.5, row_y, text=label, font='Arial 18')
+        block(sections * 3, row_y, color_pallet[0], 'Root', note=arp[0])
+        # canvas2.create_text(60, 50, text = 'ROOT')
+
+        block(sections * 4, row_y, color_pallet[1], 'Third', note=arp[1])
+
+        block(sections * 5, row_y, color_pallet[2], 'Fifth', note=arp[2])
+        block(sections * 6, row_y, color_pallet[3], 'Seventh', note=arp[3])
+
+
+
+
 
     def draw_string_labels():
-        canvas3 = Canvas(window, width=30, height=C_HEIGHT, bg='white')  # 4B2D00')
-        canvas3.place(x=buff- (buff/5), y=10, anchor='n')
+        canvas3 = Canvas(window, width=25, height=C_HEIGHT, bg=lightGray, highlightbackground = lightGray)  # 4B2D00')
+        canvas3.place(x= (buff - buff/5 - 10), y=10, anchor='n')
 
-
-
-        canvas4 = Canvas(window, width=30, height=C_HEIGHT, bg='white')  # 4B2D00')
-        canvas4.place(x=W_WIDTH - (buff/5)*4, y=10, anchor='n')
+        canvas4 = Canvas(window, width=25, height=C_HEIGHT, bg=lightGray, highlightbackground = lightGray)# 4B2D00')
+        canvas4.place(x=(W_WIDTH - (buff / 5) * 4) + 10, y=10, anchor='n')
         n = 0
         for string in neck.NECK:
-            canvas3.create_text(15,StringPositions[n],text = '- ' + string[0], font = 'Arial 14 bold')
-            canvas4.create_text(15, StringPositions[n], text = string[0] + ' -', font='Arial 14 bold')
+            canvas3.create_text(15, StringPositions[n], text='- ' + string[0], font='Arial 14 bold')
+            canvas4.create_text(15, StringPositions[n], text=string[0] + ' -', font='Arial 14 bold')
             n += 1
 
     if len(searchNotes) <= 4:
@@ -573,7 +807,6 @@ def show_arpeggio(key, numOfStrings = 6, searchNotes = []):
     draw_border()
     draw_color_key('black')
     draw_string_labels()
-
 root = Tk()
 root.geometry(str(AppWidth)+'x'+str(AppHeight)+'+50+50')
 
@@ -581,5 +814,3 @@ root.geometry(str(AppWidth)+'x'+str(AppHeight)+'+50+50')
 app = Window(root)
 
 root.mainloop()
-
-

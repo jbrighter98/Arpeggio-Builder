@@ -33,15 +33,20 @@ class Neck():
         else:
             self.NOTES = self.NOTES_SHARP[:]
 
+        neckPast12 = 5
+        E = self.getString(self.tuning[0], self.NOTES[:])
+        self.E_string = E + E[1:neckPast12]
+        A = self.getString(self.tuning[1], self.NOTES[:])
+        self.A_string = A + A[1:neckPast12]
+        D = self.getString(self.tuning[2], self.NOTES[:])
+        self.D_string = D + D[1:neckPast12]
+        G = self.getString(self.tuning[3], self.NOTES[:])
+        self.G_string = G + G[1:neckPast12]
+        B = self.getString(self.tuning[4], self.NOTES[:])
+        self.B_string = B + B[1:neckPast12]
+        e = self.getString(self.tuning[5], self.NOTES[:])
+        self.e_string = e + e[1:neckPast12]
 
-
-        self.E_string = self.getString(self.tuning[0], self.NOTES[:])
-        self.A_string = self.getString(self.tuning[1], self.NOTES[:])
-        self.D_string = self.getString(self.tuning[2], self.NOTES[:])
-        self.G_string = self.getString(self.tuning[3], self.NOTES[:])
-
-        self.B_string = self.getString(self.tuning[4], self.NOTES[:])
-        self.e_string = self.getString(self.tuning[5],self.NOTES[:])
 
         self.guitar = [self.e_string,
                        self.B_string,
@@ -50,9 +55,13 @@ class Neck():
                        self.A_string,
                        self.E_string]
         self.bass = self.guitar[-4:]
+        self.bass5 = self.guitar[-5:]
+
 
         if self.instrument == 'bass':
             self.NECK = self.bass[:]
+        elif self.instrument == '5string':
+            self.NECK = self.bass5[:]
         elif self.instrument == 'guitar':
             self.NECK = self.guitar[:]
 

@@ -68,6 +68,8 @@ def parse(string):
             while lst[0] != r:
                 lst = rotate(lst)
 
+            type = type.strip()
+
             if type in types.keys():
                 return [ lst[i] for i in types[type] ]
             else:
@@ -90,6 +92,34 @@ def buildMode(note, mode):
     mixolydian = [0, 2, 4, 5, 7, 9, 10]
     aeolian = [0, 2, 3, 5, 7, 8, 10]
     locrian = [0, 1, 3, 5, 6, 8, 10]
+    harm_minor = [0, 2, 3, 5, 7, 8, 11]
+
+    while notes[0] != note:
+        notes = rotate(notes)
+
+    modes = {'Ionian (major)' :ionian,
+             'Dorian' :dorian,
+             'Phrygian' :phrygian,
+             'Lydian' :lydian,
+             'Mixolydian' :mixolydian,
+             'Aeolian (minor)' :aeolian,
+             'Locrian' :locrian,
+             'Harmonic minor': harm_minor}
+
+    outp = [notes[i] for i in modes[mode]]
+
+    return outp
+
+def buildScale(note, scale):
+    notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+    ionian = [0, 2, 4, 5, 7, 9, 11]
+    dorian = [0,2,3,5,7,9,10]
+    phrygian = [0,1,3,5,7,8,10]
+    lydian = [0, 2, 4, 6, 7, 9, 11]
+    mixolydian = [0, 2, 4, 5, 7, 9, 10]
+    aeolian = [0, 2, 3, 5, 7, 8, 10]
+    locrian = [0, 1, 3, 5, 6, 8, 10]
+    harm_minor = [0, 2, 3, 5, 7, 8, 11]
 
     while notes[0] != note:
         notes = rotate(notes)
@@ -102,7 +132,7 @@ def buildMode(note, mode):
              'Aeolian (minor)' :aeolian,
              'Locrian' :locrian}
 
-    outp = [notes[i] for i in modes[mode]]
+    outp = [notes[i] for i in modes[scale]]
 
     return outp
 
