@@ -4,7 +4,7 @@ import webbrowser
 from CONSTANTS import *
 
 from buildArp import parse, buildMode
-from virtualneck import Neck
+from VirtualNeck import Neck
 
 DefaultTuning = ['E', 'A', 'D', 'G', 'B', 'E'] # SLOPPY SLOPPY SLOPPY
 # called as - global - in retune() and other functions,
