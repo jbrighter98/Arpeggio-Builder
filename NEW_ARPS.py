@@ -4,7 +4,7 @@ import webbrowser
 from CONSTANTS import *
 
 from buildArp import parse, buildMode
-from VirtualNeck import Neck
+from virtualneck import Neck
 
 DefaultTuning = ['E', 'A', 'D', 'G', 'B', 'E'] # SLOPPY SLOPPY SLOPPY
 # called as - global - in retune() and other functions,
@@ -78,8 +78,10 @@ class Window(Frame):   # this class is the opening window
         def donothing():
             print('not doing it.')
 
+        
+
         def tuningMenu():
-            windowWidth = 100
+            windowWidth = 150
             windowHeight = 300
 
             tune_window = Toplevel(
@@ -111,7 +113,7 @@ class Window(Frame):   # this class is the opening window
 
                     note_var = StringVar(tune_window)
                     note_var.set(note_choices[0])
-                    notes_Menu = OptionMenu(tune_window, note_var, *note_choices)
+                    notes_Menu = ttk.OptionMenu(tune_window, note_var, *note_choices)
                     notes_Menu.config(width = 8)
                     notes_Menu.place(x = 10 , y = x)
                     menus.append(notes_Menu)
@@ -133,7 +135,7 @@ class Window(Frame):   # this class is the opening window
 
             create_dropdown()
 
-            tuneButton = Button(tune_window, text='Tune', command=retune)
+            tuneButton = ttk.Button(tune_window, text='Tune', command=retune)
             tuneButton.place(x = windowWidth/2, y = windowHeight-15, anchor = 'center')
 
         def standardTuning():
@@ -168,7 +170,7 @@ class Window(Frame):   # this class is the opening window
         menubar.add_cascade(label="Tuning", menu=filemenu)
 
 
-        editmenu = Menu(menubar, tearoff=0)
+        """editmenu = Menu(menubar, tearoff=0)
         editmenu.add_command(label="Undo", command=donothing)
 
         editmenu.add_separator()
@@ -179,10 +181,10 @@ class Window(Frame):   # this class is the opening window
         editmenu.add_command(label="Delete", command=donothing)
         editmenu.add_command(label="Select All", command=donothing)
 
-        menubar.add_cascade(label="Edit", menu=editmenu)
+        menubar.add_cascade(label="Edit", menu=editmenu)"""
         helpmenu = Menu(menubar, tearoff=0)
-        helpmenu.add_command(label="Help Index", command=donothing)
-        helpmenu.add_command(label="About...", command=donothing)
+        helpmenu.add_command(label="Help", command=help_window)
+        helpmenu.add_command(label="About...", command=about_window)
         menubar.add_cascade(label="Help", menu=helpmenu)
 
         root.config(menu=menubar)
@@ -339,7 +341,7 @@ def callback7(event):
 def help_window():
 
     hwind = Toplevel(root)
-    hwind.geometry('400x350+500+50')
+    hwind.geometry('400x400+500+50')
     hwind.title('Help')
 
 
@@ -380,6 +382,21 @@ def help_window():
     link7 = Label(hwind, text="What are the types of Scales for Guitar/Bass?", fg="blue", cursor="hand2")
     link7.pack()
     link7.bind("<Button-1>", callback7)
+
+
+def about_window():
+    awind = Toplevel(root)
+    awind.geometry('400x475+500+50')
+    awind.title('About')
+
+    with open('about_file.txt','r') as about_file:
+        lines = about_file.readlines()
+
+    for line in lines:
+        line = line.rstrip()
+        label = Label(awind, text = line).pack()
+
+        
 
 def show_arpeggio(key, numOfStrings=6, searchNotes=[]):
     global DefaultTuning
@@ -827,4 +844,3 @@ root.geometry(str(AppWidth)+'x'+str(AppHeight)+'+50+50')
 app = Window(root)
 
 root.mainloop()
-
