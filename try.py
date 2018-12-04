@@ -58,7 +58,7 @@ class Window(Frame):   # this class is the opening window
         note_choices = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
         note_var = StringVar(self.page3)
         note_var.set('C')
-        notes_Menu = OptionMenu(self.page3, note_var, *note_choices)
+        notes_Menu = ttk.OptionMenu(self.page3, note_var, *note_choices)
         notes_Menu.pack()
 
         mode_choices = [ 'Ionian (major)',
@@ -72,7 +72,7 @@ class Window(Frame):   # this class is the opening window
                          ]
         mode_var = StringVar(self.page3)
         mode_var.set('Ionian (major)')
-        modes_Menu = OptionMenu(self.page3, mode_var, *mode_choices)
+        modes_Menu = ttk.OptionMenu(self.page3, mode_var, *mode_choices)
         modes_Menu.pack()
 
         GorB = [['Guitar', 6], ['Bass', 4], ["5 String", 5]]
@@ -83,7 +83,7 @@ class Window(Frame):   # this class is the opening window
             ttk.Radiobutton(self.page3, text = GorBname, variable = GBV, value = val_GB).pack()
 
 
-        but = Button(self.page3, text='go',
+        but = ttk.Button(self.page3, text='Build',
                      command=lambda: Display(getModeInput(),
                                              window_root= self,
                                             numOfStrings = GBV.get(),
@@ -94,6 +94,12 @@ class Window(Frame):   # this class is the opening window
                                              DotMode = self.DotMode,
                                              mode = mode_var.get()))
         but.pack()
+
+        spacelab = ttk.Label(text = ' ')
+        spacelab.pack()
+
+        quitBut = ttk.Button(self.page3, text = 'Quit', command = self.client_exit)
+        quitBut.pack()
 
 
 
@@ -392,6 +398,7 @@ class Window(Frame):   # this class is the opening window
 
         helpmenu = Menu(menubar, tearoff=0)
         helpmenu.add_command(label="Help", command=help_window)
+        helpmenu.add_command(label="Tutorial", command=help_window)
         helpmenu.add_command(label="About...", command=about_window)
         menubar.add_cascade(label="Help", menu=helpmenu)
 
@@ -425,8 +432,8 @@ class Window(Frame):   # this class is the opening window
         bbutton = ttk.Button(labelFrame, text='Bass', command=lambda: Display(v.get(), self, 4, parse(v.get()), tuning = DefaultTuning, colorBlindMode= self.ColorBlind, DotMode = self.DotMode))
         bbutton.pack()
 
-        hbutton = ttk.Button(labelFrame, text='Help', command=help_window)
-        hbutton.pack()
+        fivebutton = ttk.Button(labelFrame, text='5 String', command=lambda: Display(v.get(),self, 5, parse(v.get()), tuning = DefaultTuning, colorBlindMode= self.ColorBlind, DotMode = self.DotMode))
+        fivebutton.pack()
 
         labelspace = ttk.Label(labelFrame, text = ' ')
         labelspace.pack()
@@ -471,7 +478,7 @@ class Window(Frame):   # this class is the opening window
         labelFrame4 = ttk.LabelFrame(self.page2)
         labelFrame4.grid(column=2,row=0,sticky='N')
 
-        label4 = ttk.Label(labelFrame4, text = 'Guitar or Bass?')
+        label4 = ttk.Label(labelFrame4, text = 'Which Instrument?')
         label4.pack()
 
         for GorBname,val_GB in GorB:
@@ -487,8 +494,6 @@ class Window(Frame):   # this class is the opening window
         labelFrame6 = ttk.LabelFrame(self.page2)
         labelFrame6.grid(column=2,row=1)
 
-        helpbutton = ttk.Button(labelFrame6, text='Help', command=help_window)
-        helpbutton.pack()
 
         quitbutton = ttk.Button(labelFrame6, text = 'Quit', command = self.client_exit)
         quitbutton.pack()
