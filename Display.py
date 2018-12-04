@@ -441,7 +441,7 @@ class Display:
         for n in self.note_object_list:
             if n.note.capitalize() == arp[0]:
                 color = n.color
-                print(color)
+                
                 break
 
 
@@ -452,7 +452,7 @@ class Display:
         for n in self.note_object_list:
             if n.note.capitalize() == arp[1]:
                 color = n.color
-                print(color)
+
                 break
 
         block(sections * 4, row_y, color, 'Third', note=arp[1])
@@ -460,7 +460,7 @@ class Display:
         for n in self.note_object_list:
             if n.note.capitalize() == arp[2]:
                 color = n.color
-                print(color)
+
                 break
 
         block(sections * 5, row_y, color, 'Fifth', note=arp[2])
@@ -468,7 +468,7 @@ class Display:
         for n in self.note_object_list:
             if n.note.capitalize() == arp[3]:
                 color = n.color
-                print(color)
+
                 break
         block(sections * 6, row_y, color, 'Seventh', note=arp[3])
 
