@@ -405,22 +405,19 @@ class Display:
         :return: 
         '''
 
-        def kill_color_key():
-            canvas2.forget()
 
-        if replace:
-            kill_color_key()
-        canvas2 = Canvas(self.window, width=self.W_WIDTH - 20, height=self.W_HEIGHT - (self.C_HEIGHT + 20), bg=lightn(lightGray, 20),
+
+        self.canvas2 = Canvas(self.window, width=self.W_WIDTH - 20, height=self.W_HEIGHT - (self.C_HEIGHT + 20), bg=lightn(lightGray, 20),
                          bd=0, relief=SUNKEN, highlightbackground=shade(lightGray, 50))  # 4B2D00')
 
-        canvas2.place(x=self.W_WIDTH / 2, y=20 + self.C_HEIGHT, anchor='n')
+        self.canvas2.place(x=self.W_WIDTH / 2, y=20 + self.C_HEIGHT, anchor='n')
 
         def block(x, y, color='black', label='', note=''):
             size = 15
 
-            canvas2.create_rectangle(x + size, y + size / 2, x - size, y - size / 3, fill=color)
-            canvas2.create_text(x, y + 2, text=note, font='Arial 13 bold')
-            canvas2.create_text(x + size + 10, y, text=label, font="Arial 15", anchor='w')
+            self.canvas2.create_rectangle(x + size, y + size / 2, x - size, y - size / 3, fill=color)
+            self.canvas2.create_text(x, y + 2, text=note, font='Arial 13 bold')
+            self.canvas2.create_text(x + size + 10, y, text=label, font="Arial 15", anchor='w')
 
         sections = self.W_WIDTH / 10
         row_y = 20
@@ -440,14 +437,44 @@ class Display:
         # canvas2.create_line(W_WIDTH-20, 3, W_WIDTH-20, W_HEIGHT, fill='white', width=2)
 
 
-        canvas2.create_text(sections * 1.5, row_y, text=label, font='Arial 13')
-        block(sections * 3, row_y, self.color_pallet[0], 'Root', note=arp[0])
+        color = 'black'
+        for n in self.note_object_list:
+            if n.note.capitalize() == arp[0]:
+                color = n.color
+                print(color)
+                break
+
+
+        self.canvas2.create_text(sections * 1.5, row_y, text=label, font='Arial 13')
+        block(sections * 3, row_y, color, 'Root', note=arp[0])
         # canvas2.create_text(60, 50, text = 'ROOT')
 
-        block(sections * 4, row_y, self.color_pallet[1], 'Third', note=arp[1])
+        for n in self.note_object_list:
+            if n.note.capitalize() == arp[1]:
+                color = n.color
+                print(color)
+                break
 
-        block(sections * 5, row_y, self.color_pallet[2], 'Fifth', note=arp[2])
-        block(sections * 6, row_y, self.color_pallet[3], 'Seventh', note=arp[3])
+        block(sections * 4, row_y, color, 'Third', note=arp[1])
+
+        for n in self.note_object_list:
+            if n.note.capitalize() == arp[2]:
+                color = n.color
+                print(color)
+                break
+
+        block(sections * 5, row_y, color, 'Fifth', note=arp[2])
+
+        for n in self.note_object_list:
+            if n.note.capitalize() == arp[3]:
+                color = n.color
+                print(color)
+                break
+        block(sections * 6, row_y, color, 'Seventh', note=arp[3])
+
+    def replace_color_key(self):
+        self.canvas2.delete()
+        self.draw_color_key(replace = True)
 
     def draw_arp_name(self):
 
@@ -537,6 +564,7 @@ class Display:
                 self.GOTCLICK(n, newColor)
 
         self.p_notes = newNotes[:]
+        self.draw_color_key(replace = True)
         self.refresh_arp_name()
 
         '''
