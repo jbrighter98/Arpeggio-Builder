@@ -110,7 +110,7 @@ information for questions, comments, or concerns.
 
 This is an example of the Chord and Scale Display, specifically a Scale illustration.
 
-33 - This the neck of your guitar instrument. It is oriented as if you were olding the guitar in the playing position and looking down at the neck.
+33 - This is the neck of your guitar instrument. It is oriented as if you were holding the guitar in the playing position and looking down at the neck.
 Each note in the Chord/Scale is marked and labeled. If you were to click any of those marked notes, you would create an inversion and change the 
 root note to that note, creating a new scale.
 34 - These notes, and the matching notes on the other end, mark the names of the strings. These would change depending on if you changed the tuning.
