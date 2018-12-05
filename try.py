@@ -458,13 +458,24 @@ class Window(Frame):   # this class is the opening window
         GBV.set(19)
 
         labelFrame2 = ttk.LabelFrame(self.page2)
-        labelFrame2.grid(column=0, row=0)
+        labelFrame2.grid(column=0, row=0, columnspan = 2)
 
         label2 = ttk.Label(labelFrame2, text='In which key would you like to build?')
         label2.pack()
 
+        labelFrame2_1 = ttk.LabelFrame(labelFrame2)
+        labelFrame2_1.pack(side=LEFT)
+
+        labelFrame2_2 = ttk.LabelFrame(labelFrame2)
+        labelFrame2_2.pack(side=TOP)
+
+        cnt = 0
         for keyval, vval in notekey:
-            ttk.Radiobutton(labelFrame2, text=keyval, variable=vv, value=vval).pack(anchor=W)
+            if cnt >= len(notekey)/2:
+                ttk.Radiobutton(labelFrame2_2, text=keyval, variable=vv, value=vval, width = 10).pack(anchor=W)
+            else:
+                ttk.Radiobutton(labelFrame2_1, text=keyval, variable=vv, value=vval, width = 10).pack(anchor=W)
+            cnt+=1
 
         labelFrame3 = ttk.LabelFrame(self.page2)
         labelFrame3.grid(column=2,row=0,sticky='N')
