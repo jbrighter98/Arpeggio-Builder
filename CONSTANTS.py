@@ -1,4 +1,4 @@
-AppHeight = 400
+AppHeight = 375
 AppWidth = 500
 from virtualneck import Neck
 
