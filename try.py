@@ -6,6 +6,7 @@ from CONSTANTS import *
 from virtualneck import Neck
 from buildArp import parse, buildMode
 from Display import *
+from tutorial import *
 
 DefaultTuning = ['E', 'A', 'D', 'G', 'B', 'E'] # SLOPPY SLOPPY SLOPPY
 # called as - global - in retune() and other functions,
@@ -398,7 +399,7 @@ class Window(Frame):   # this class is the opening window
 
         helpmenu = Menu(menubar, tearoff=0)
         helpmenu.add_command(label="Help", command=help_window)
-        helpmenu.add_command(label="Tutorial", command=help_window)
+        helpmenu.add_command(label="Tutorial", command=lambda: user_tutorial(root))
         helpmenu.add_command(label="About...", command=about_window)
         menubar.add_cascade(label="Help", menu=helpmenu)
 
@@ -623,7 +624,7 @@ def help_window():
 
 def about_window():
     awind = Toplevel(root)
-    awind.geometry('400x525+500+50')
+    awind.geometry('400x600+500+50')
     awind.title('About')
 
     with open('about_file.txt','r') as about_file:
@@ -631,7 +632,7 @@ def about_window():
 
     for line in lines:
         line = line.rstrip()
-        label = Label(awind, text = line).pack()
+        label = Label(awind, text = line, font = ("Times",10)).pack()
 
 
 root = Tk()
@@ -641,3 +642,4 @@ root.geometry(str(AppWidth)+'x'+str(AppHeight)+'+50+50')
 app = Window(root)
 
 root.mainloop()
+
