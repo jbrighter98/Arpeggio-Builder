@@ -13,6 +13,7 @@ class DIAMOND:
         self.x = x
         self.y = y
         shadeamnt = 50
+        self.color = fill
         self.fill = shade(fill, shadeamnt)
         self.note = note
 
@@ -81,6 +82,7 @@ class SQUARE:
         self.x = x
         self.y = y
         shadeamnt = 100
+        self.color = fill
         self.fill = shade(fill,shadeamnt)
         self.note = note
 
@@ -147,6 +149,7 @@ class POLY_org:
         self.x = x
         self.y = y
         shadeamnt = 100
+        self.color = fill
         self.fill = fill
         self.fillshade = shade(fill,shadeamnt)
         self.note = note
@@ -229,12 +232,13 @@ class POLY_org:
         canvas.delete(self.text)
 
 
-class POLY: ### STAR
+class STAR: ### STAR
     def __init__(self, x, y, note, fill, Display, size=12, shift=0, canvas='c'):
         self.x = x
         self.y = y
         self.true_y = y - size/6 # compensation because Note letter displays offcenter - STAR now rides a bit high
-        shadeamnt = 100
+        shadeamnt = 50
+        self.color = fill
         self.fill = fill
         self.fillshade = shade(fill,shadeamnt)
         self.note = note
@@ -247,7 +251,7 @@ class POLY: ### STAR
 
         self.shift = shift
 
-        self.size = size + 1 ## larger to emphisize ROOT note
+        self.size = size  ## larger to emphisize ROOT note
 
         self.defaultSize = 11
         self.adjust = 1
@@ -258,7 +262,7 @@ class POLY: ### STAR
                       self.y + (self.size*self.adjust),
 
                       self.x,                       # middle bottom
-                      self.y + self.size/1.5,
+                      self.y + self.size/2,
 
                       self.x - (self.size * 1.1),  # lower left
                       self.y + (self.size*self.adjust),
@@ -270,13 +274,13 @@ class POLY: ### STAR
                       self.y - (self.size*self.adjust)/1.4,
 
                       self.x - self.size/2,  # middle inset left
-                      self.y - self.size/1.4,
+                      self.y - self.size/1.5,
 
                       self.x,  # middle top
                       self.y - (self.size * 1.5),
 
                       self.x + self.size / 2,  # middle inset right
-                      self.y - self.size/1.4,
+                      self.y - self.size/1.5,
 
                       self.x + (self.size * 1.2),  # upper right
                       self.y - ((self.size*self.adjust)/1.4),
@@ -291,7 +295,7 @@ class POLY: ### STAR
         highlight_coord = [self.x + (self.size * 1.1) - shade_size - borderComp,  # lower right
                       self.y + (self.size * self.adjust) - shade_size,
                            self.x,                          # middle bottom
-                           self.y + self.size/3,
+                           self.y + self.size/4,
 
                       self.x - (self.size * 1.1) + borderComp*2,  # lower left
                       self.y + (self.size * self.adjust) - borderComp*2,
@@ -319,7 +323,7 @@ class POLY: ### STAR
 
         self.A = self.canvas.create_polygon(poly_coord, fill=self.fillshade, outline='black', width=self.outline)
         self.B = self.canvas.create_polygon(highlight_coord, fill=fill, outline='', width=self.outline)
-        self.text = self.canvas.create_text(self.x, self.true_y, text=self.note, font=self.font)
+        self.text = self.canvas.create_text(self.x, self.true_y, text=self.note, font=self.font, fill = 'black')
 
         self.canvas.tag_bind(self.A, '<ButtonPress-1>', lambda v: Display.ALL(newRoot_Dot=self))
         self.canvas.tag_bind(self.B, '<ButtonPress-1>', lambda v: Display.ALL(newRoot_Dot=self))
@@ -336,14 +340,9 @@ class CIRCLE:
         self.x = x
         self.y = y
         shadeamnt = 100
+        self.color = fill
         self.fill = shade(fill,shadeamnt)
         self.note = note
-
-        self.font = "Arial 15 bold"
-        if self.fill == gray:
-            self.font = "Arial 10"
-        else:
-            self.font = "Arial 15 bold"
 
 
         self.canvas = Display.canvas # canvas
@@ -351,9 +350,18 @@ class CIRCLE:
         self.shift = shift
 
         self.size = size
+        self.font = ''
+
+        if self.color == gray:
+            self.font = "Arial 10"
+            self.size -= 2
+
+        else:
+            self.font = "Arial 15 bold"
         self.defaultSize = 11
         self.adjust = 1.2
         self.outline = (1 / 6) * self.size
+
 
         # coordinates of polygon
         poly_coord = [self.x + self.size/self.adjust,  # lower right
@@ -400,7 +408,7 @@ class CIRCLE:
 
 def genShape(x, y, note, fill, Display, size=11, shift=0, canvas='c'):
     if fill == Default_Colors[0] or fill == ColorBlind_Colors[0]:
-        return POLY(x, y, note, fill, Display, size, shift, canvas)
+        return STAR(x, y, note, fill, Display, size, shift, canvas)
     elif fill == Default_Colors[1] or fill == ColorBlind_Colors[1]:
         return CIRCLE(x, y, note, fill, Display, size, shift, canvas)
     elif fill == Default_Colors[2] or fill == ColorBlind_Colors[2]:
@@ -409,7 +417,7 @@ def genShape(x, y, note, fill, Display, size=11, shift=0, canvas='c'):
     elif fill == Default_Colors[3]or fill == ColorBlind_Colors[3]:
         return SQUARE(x, y, note, fill, Display, size, shift, canvas)
     else:
-        return SQUARE(x, y, note, fill, Display, size, shift, canvas)
+        return CIRCLE(x, y, note, fill, Display, size, shift, canvas)
 
 # root = Tk()
 #

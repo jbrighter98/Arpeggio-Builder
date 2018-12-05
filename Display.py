@@ -45,6 +45,8 @@ class Display:
         # ------------------------------------------------------------------------------------------------------------ #
         ### Instrument Variables ###
 
+        self.key = key
+
         self.num_strings = numOfStrings
         self.tuning = tuning[:]
 
@@ -113,7 +115,7 @@ class Display:
         self.window = window # for use within functions
         window.geometry(str(self.W_WIDTH) + 'x' + str(self.W_HEIGHT) + '+50+400')
         window.configure(background=lightGray)
-        window.title(key)
+        window.title(self.key)
 
         self.canvas = Canvas(window, width=self.C_WIDTH, height=self.C_HEIGHT, bg=neckColor, bd = 0, highlightbackground = shade(lightGray, 150))  # 4B2D00')
 
@@ -420,7 +422,7 @@ class Display:
             self.canvas2.create_text(x + size + 10, y, text=label, font="Arial 15", anchor='w')
 
         sections = self.W_WIDTH / 10
-        row_y = 20
+        row_y = 30
         label = 'Notes: - '
         for note in self.KeyNotes:
             label += note + ' - '
@@ -444,6 +446,7 @@ class Display:
                 
                 break
 
+        self.canvas2.create_text(sections * 1.5, row_y-20, text=self.key, font='Arial 15 bold')
 
         self.canvas2.create_text(sections * 1.5, row_y, text=label, font='Arial 13')
         block(sections * 3, row_y, color, 'Root', note=arp[0])
@@ -487,6 +490,19 @@ class Display:
 
 
             self.canvas4.create_text(10, 20, text=text, font='Arial 20 bold', fill = 'black', anchor = 'w')
+
+        elif len(self.search_notes) == 4:
+            inversions = [ 'Root Position',
+                            'First Inversion',
+                            'Second Inversion',
+                            'Third Inversion' ]
+
+            nRoot = self.p_notes[0]
+            inversion = inversions[self.KeyNotes.index(nRoot)]
+
+
+            text = self.key + ' -- ' + inversion
+            self.canvas4.create_text(self.W_WIDTH/4, 20, text=text, font='Arial 20', fill='black', anchor='e')
         else:
             pass ##### --------- HANDLE 7th ARP INVERSIONS ------- #
 

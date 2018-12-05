@@ -17,6 +17,7 @@ def parse(string):
     dim7_arp_index = [0, 3, 6, 9]
     d7b5_arp_index = [0, 4, 6, 10]
     min7b5_arp_index = [0, 3, 6, 10]
+    aug_arp_index = [0, 4, 8, 10]
 
     harm = [0, 3, 7, 11]
     def rotate(lst):
@@ -53,6 +54,11 @@ def parse(string):
 
             'dim7': dim7_arp_index,
             'dim': dim7_arp_index,
+            'diminished': dim7_arp_index,
+
+            'augmented': aug_arp_index,
+            'aug': aug_arp_index,
+            'aug7': aug_arp_index,
 
             '7b5' : d7b5_arp_index,
             'min7b5': min7b5_arp_index

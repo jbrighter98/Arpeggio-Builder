@@ -446,7 +446,7 @@ class Window(Frame):   # this class is the opening window
                    ['F',7], ['F#',8],['Gb',9], ['G',10], ['G#',11],['Ab',12], ['A',13],
                    ['A#',14],['Bb',15], ['B',16]]
 
-        majmin = [['Major',17],['Minor',18]]
+        majmin = [['Major',17],['Minor',18],['Augmented', 22], ['Diminished', 23]]
 
         GorB = [['Guitar',19],['Bass',20],["5 String", 21]]
 
@@ -458,16 +458,16 @@ class Window(Frame):   # this class is the opening window
         GBV.set(19)
 
         labelFrame2 = ttk.LabelFrame(self.page2)
-        labelFrame2.grid(column=0,row=0)
+        labelFrame2.grid(column=0, row=0)
 
-        label2 = ttk.Label(labelFrame2, text = 'In which key would you like to build?')
+        label2 = ttk.Label(labelFrame2, text='In which key would you like to build?')
         label2.pack()
 
-        for keyval,vval in notekey:
-            ttk.Radiobutton(labelFrame2, text = keyval, variable = vv, value = vval).pack(anchor=W)
+        for keyval, vval in notekey:
+            ttk.Radiobutton(labelFrame2, text=keyval, variable=vv, value=vval).pack(anchor=W)
 
         labelFrame3 = ttk.LabelFrame(self.page2)
-        labelFrame3.grid(column=1,row=0,sticky='N')
+        labelFrame3.grid(column=2,row=0,sticky='N')
 
         label3 = ttk.Label(labelFrame3, text = 'Major or Minor?')
         label3.pack()
@@ -477,7 +477,7 @@ class Window(Frame):   # this class is the opening window
 
 
         labelFrame4 = ttk.LabelFrame(self.page2)
-        labelFrame4.grid(column=2,row=0,sticky='N')
+        labelFrame4.grid(column=3,row=0,sticky='N')
 
         label4 = ttk.Label(labelFrame4, text = 'Which Instrument?')
         label4.pack()
@@ -550,9 +550,13 @@ class Window(Frame):   # this class is the opening window
         thekeynote = str(notekey[key_note][0])
 
         if key_type == 17:
-            thekeytype = 'Major'
+            thekeytype = 'Maj7'
         elif key_type == 18:
-            thekeytype = 'Minor'
+            thekeytype = 'min7'
+        elif key_type == 22:
+            thekeytype = 'aug7'
+        elif key_type == 23:
+            thekeytype = 'dim7'
 
         key = thekeynote + thekeytype
         #print(key, 'here')
