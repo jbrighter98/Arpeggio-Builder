@@ -1,0 +1,119 @@
+
+Welcome to the Chord and Arpeggio Builder tutorial!
+
+Here, we will show you around all the features of this tool.
+If you have any additional questions or concerns not covered
+in this tutorial, feel free to contact us by emailing:
+
+chord.arpeggio.builder@gmail.com
+
+
+
+The Toolbar is located at the top-left of the main menu. It allows you to 
+change multiple settings to help make your practicing and learning easier
+and more enjoyable.
+
+1 - Tuning Menu - This menu allows you to choose between built-in tunings
+and create your own custom tunings.
+2 - Options Menu - This menu allows you to change settings in the neck display,
+including colors and shapes of the notes.
+3 - Help Menu - This menu has different resources to aid you in your time
+learning.
+4 - Chord Builder Tab - This allows you to directly input the key you would 
+like to create.
+5 - Alternative Build Tab - This allows you to create a more guided creation 
+of the key.
+6 - Scales Tab - This allows for the building of scales in a specific key 
+used in arpeggios.
+
+
+
+The Builder Tab is the default way to input a key and result in
+the root chord for that key.
+
+7 - Text Entry Box - This is where you would input your desired key.
+8 - Guitar Button - After you type in your key, click this button to create
+the chords on a guitar neck.
+9 - Bass Button - After you type in your key, click this button to create
+the chords on a bass guitar neck.
+10 - 5 String Button - After you type in your key, click this button to create
+the chords on a 5 string guitar neck
+11 - Quit Button - Clicking the quit button exits the tool.
+
+
+
+The Alternative Build Tab is meant for new users who might not
+know what to input in the Builder Tab, to still be able to use this
+tool.
+
+12 - Key Options - This list of options allows you to see all of your
+choices for making your desired key.
+13 - Major or Minor Option - One of these two, paired with your choice
+from the Key Options, make up the large majority of possible chords featured
+in this tool.
+14 - Instrument Option - This allows you to choose between a guitar, bass
+guitar, or 5 string guitar.
+
+
+
+The Scales Tab allows you to create illistrated scales used for arpeggios and gaining
+a general understanding of the relation of notes.
+
+15 - Key Dropdown Menu - Here, just like before, you get to choose the key in which
+you would like the scale to be built.
+16 - Scale Type - Here you can choose the type of scale you would like. If you need
+help understanding the different types of scales, we recommend going to the help page
+on the Main Menu.
+17 - Instrument Option - Just like before, you can choose which instrument you would like.
+18 - Build Button - After you choose you key and scale type, press the Build Button to
+build the illustration of the scale.
+
+
+
+The Tuning Menu allows you a way to completely simulate a change in the tuning of the
+instrument.
+
+19 - Custom - This option allows you to change the tuning of the instrument in any way
+you like. You are also able to save custom tunings as well.
+20 - Delete Custom - This option is the way to delete your saved custom tunings.
+21 - Default Tunings - The top three listed tunings are commonly used tunings for the 
+three instruments, which are Standard E, Drop D, and Five String.
+22 - Saved Tunings - Below the default tunings are your list of saved tunings which can
+just be clicked to activate.
+
+
+
+The Options Menu allows you to change the look of the illustrated notes to fit personal
+needs.
+
+23 - Default Colors - These set the color of the notes to the set default colors.
+24 - Colorblind Mode - This option is meant for users who are colorblind. It changes the
+colors to a more colorblind friendly color palette.
+25 - Dot Mode - By default, illustrated notes are in the shape of a dot, this will return
+the shape to the dot mode if another mode has been previously chosen.
+26 - Shape Mode - This mode changes the shape of the notes to different shapes. This is an
+alternative option to the Colorblind Mode.
+27 - This is a note in Dot mode and with Default Colors.
+28 - This is the same note in Dot mode but also in Colorblind Mode.
+29 - This in the same note in Shape mode and with Default Colors.
+
+
+
+The Help Menu provides usful resources to aid in your practicing experience.
+
+30 - Help - This provides a list of links and resources to get brief background information
+about specific musical topics.
+31 - Tutorial - By clicking this option, you will be taken to this tutorial to help you learn
+about the tool itself.
+32 - About - This option lets you read about the tool and its creation, along with contact
+information for questions, comments, or concerns.
+
+This is an example of the Chord and Scale Display, specifically a Scale illustration.
+
+33 - This is the neck of your guitar instrument. It is oriented as if you were holding the guitar in the playing position and looking down at the neck.
+Each note in the Chord/Scale is marked and labeled. If you were to click any of those marked notes, you would create an inversion and change the 
+root note to that note, creating a new scale.
+34 - These notes, and the matching notes on the other end, mark the names of the strings. These would change depending on if you changed the tuning.
+35 - This is a list of the all the notes in the Chord/Scale's key.
+36 - This is the reference of colors in the key, letting you know what and where the root (first), third, fifth, and seventh, notes are in the key. 
+37 - This lets you know exactly what the key is called. It will change depending on the inversion you create. (only works on Scales)
