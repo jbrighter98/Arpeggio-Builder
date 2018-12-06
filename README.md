@@ -1,4 +1,4 @@
-# Arpeggio-Builder
+# Chord and Arpeggio Builder
 
 To use this program, we recommend downloading all the files from the master branch, which is always the most user friendly version
 
